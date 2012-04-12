@@ -1,5 +1,5 @@
-*implement ngx_http_server_info_hanlder function
+* implement ngx_http_server_info_hanlder function
 
-*move path variable into location conf struct
+* move path variable into location conf struct
 
-*add one more directive to allow user to decide statistic files path
+* add one more directive to allow user to decide statistic files path
