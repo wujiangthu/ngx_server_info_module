@@ -2,7 +2,6 @@
  *  Wu Jiang <wujiangthu@gmail.com>
  */
 
-//#include "/home/usher/nginx/objs/ngx_modules.c"
 #include <stdio.h>
 #include <ngx_config.h>
 #include <ngx_conf_file.h>
@@ -10,7 +9,6 @@
 #include <ngx_http.h>
 #include "ngx_modules_name.h"
 
-//extern ngx_module_t *ngx_modules[];
 typedef struct {
   ngx_flag_t enable;
 } ngx_http_server_info_loc_conf_t;
@@ -79,19 +77,18 @@ ngx_http_server_info_generate_statistic_file(ngx_str_t *output_path)
     return NGX_CONF_ERROR;
   }
 
- // int modules_num = sizeof(ngx_modules) / sizeof(void *) - 1;
   int dcount = 0;
   int directives_num = 0;
   int mcount;
   for(mcount = 0 ; ngx_modules[mcount] ; mcount++){
     fprintf(fp, "%s:\n", ngx_modules_name[mcount].data);
     dcount = 0;
-    //directives_num = sizeof*(ngx_modules[mcount]->commands) / sizeof(ngx_command_t) - 1;
     directives_num = get_commands_num(ngx_modules[mcount]->commands);
     for(; dcount < directives_num; dcount++)
       fprintf(fp, "%s:\n", ngx_modules[mcount]->commands[dcount].name.data);
   }
   fclose(fp);
+
   return NGX_CONF_OK;
 }
 
@@ -109,7 +106,9 @@ return num;
 
 static ngx_int_t 
 ngx_http_server_info_handler(ngx_http_request_t *r){
+
   return NGX_OK;
+
 }
 
 static void *
