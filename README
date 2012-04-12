@@ -1,3 +1,24 @@
-Show server information, such as compiled modules, module directives and so on.
-And for tingting:)
+This module is used to show server information, such as compiled modules, module directives, how many handlers hooked in each phase and so on.
 
+1. INSTALLATION
+
+wget https://wujiangthu@github.com/wujiangthu/ngx_server_info_module.git
+cd ngx_server_info_module
+chmod +x configure.sh
+./configure.sh your_ngx_home_path (normally /usr/local/nginx)
+cd your_ngx_home_path
+./configure --add-module = ngx_server_info_module_souce_code_directory
+make & make install
+
+
+2. USAGE
+
+location /server_info {
+  server_info on;
+}
+
+Visit http://your_host_name/server_info
+
+You can use auth modules together to make authentication.
+
+If you have any question, find any bugs or anything other, please feel free to contact me via wujiangthu at gmail. 
