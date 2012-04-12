@@ -2,7 +2,7 @@ This module is used to show server information, such as compiled modules, module
 
 1. INSTALLATION
 
-wget https://wujiangthu@github.com/wujiangthu/ngx_server_info_module.git
+download file and uncompress
 cd ngx_server_info_module
 chmod +x configure.sh
 ./configure.sh your_ngx_home_path (normally /usr/local/nginx)
