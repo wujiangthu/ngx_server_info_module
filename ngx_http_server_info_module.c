@@ -2,14 +2,15 @@
  *  Wu Jiang <wujiangthu@gmail.com>
  */
 
-
-#include <stdio>
+//#include "/home/usher/nginx/objs/ngx_modules.c"
+#include <stdio.h>
 #include <ngx_config.h>
+#include <ngx_conf_file.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
-#include <ngx_modules_name.h>
+#include "ngx_modules_name.h"
 
-
+//extern ngx_module_t *ngx_modules[];
 typedef struct {
   ngx_flag_t enable;
 } ngx_http_server_info_loc_conf_t;
@@ -17,11 +18,12 @@ typedef struct {
 
 static ngx_int_t ngx_http_server_info_init(ngx_conf_t *cf);
 static void *ngx_http_server_info_create_loc_conf(ngx_conf_t *cf);
-static char *ngx_http_server_info_merge_loc_conf(ngx_conf_t *cf);
+static char *ngx_http_server_info_merge_loc_conf(ngx_conf_t *cf,
+  void *parent, void *child);
 
 static ngx_int_t ngx_http_server_info_handler(ngx_http_request_t *r);
-static ngx_int_t ngx_http_server_info_generate_statistic_file();
-
+static char *ngx_http_server_info_generate_statistic_file(ngx_str_t *output_path);
+static ngx_int_t get_commands_num(ngx_command_t *commands);
 
 static ngx_command_t ngx_http_server_info_commands[] = {
 
@@ -65,30 +67,49 @@ ngx_module_t ngx_http_server_info_module = {
 };
 
 
-static ngx_string_t path = ngx_string("");
+static ngx_str_t path = ngx_string("statistics");
 
-static ngx_int_t
-ngx_http_server_info_generate_statistic_file(ngx_string_t *output_path)
+static char * 
+ngx_http_server_info_generate_statistic_file(ngx_str_t *output_path)
 {
   FILE *fp;
-  fp = fopen(output_path->data, "wt+");
+  fp = fopen((char *)output_path->data, "wt+");
   if(!fp){
     printf("failed on file"); 
-    return 0;
+    return NGX_CONF_ERROR;
   }
 
-  int modules_num = sizeof(ngx_modules)/sizeof(ngx_module_t);
-  int mcount = 0;
+ // int modules_num = sizeof(ngx_modules) / sizeof(void *) - 1;
   int dcount = 0;
   int directives_num = 0;
-  for(; mcount < modules_num ; mcount++){
+  int mcount;
+  for(mcount = 0 ; ngx_modules[mcount] ; mcount++){
     fprintf(fp, "%s:\n", ngx_modules_name[mcount].data);
     dcount = 0;
-    directives_num = sizeof(*(ngx_modules[mcount]))/sizeof(ngx_comand_t);
+    //directives_num = sizeof*(ngx_modules[mcount]->commands) / sizeof(ngx_command_t) - 1;
+    directives_num = get_commands_num(ngx_modules[mcount]->commands);
     for(; dcount < directives_num; dcount++)
-      fprintf(fp, "%s:\n", ngx_modules[mcount]->commands[dcount]->data);
+      fprintf(fp, "%s:\n", ngx_modules[mcount]->commands[dcount].name.data);
   }
+  fclose(fp);
+  return NGX_CONF_OK;
+}
 
+static ngx_int_t
+get_commands_num(ngx_command_t *commands){
+  ngx_command_t *cmd = commands;
+  int num = 0;
+  while(NULL != cmd->name.data){
+    num++;
+    cmd = cmd + sizeof(ngx_command_t);
+  } 
+
+return num;
+}
+
+static ngx_int_t 
+ngx_http_server_info_handler(ngx_http_request_t *r){
+  return NGX_OK;
 }
 
 static void *
@@ -126,6 +147,7 @@ ngx_http_server_info_init(ngx_conf_t *cf)
 
   clcf->handler = ngx_http_server_info_handler;
 
+  ngx_http_server_info_generate_statistic_file(&path);
+
   return NGX_OK;
 }
-
