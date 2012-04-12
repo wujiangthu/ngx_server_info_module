@@ -1,5 +1,5 @@
 /*
- *  Wu Jiang <wujiangthu@gmail.com>
+ *  copyright(c) Wu Jiang <wujiangthu@gmail.com>
  */
 
 #include <stdio.h>
