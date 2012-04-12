@@ -3,3 +3,5 @@
 * move path variable into location conf struct
 
 * add one more directive to allow user to decide statistic files path
+
+* add implementation details in readme
