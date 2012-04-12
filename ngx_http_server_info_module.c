@@ -93,7 +93,8 @@ ngx_http_server_info_generate_statistic_file(ngx_str_t *output_path)
 }
 
 static ngx_int_t
-get_commands_num(ngx_command_t *commands){
+get_commands_num(ngx_command_t *commands)
+{
   ngx_command_t *cmd = commands;
   int num = 0;
   while(NULL != cmd->name.data){
@@ -101,14 +102,13 @@ get_commands_num(ngx_command_t *commands){
     cmd = cmd + sizeof(ngx_command_t);
   } 
 
-return num;
+  return num;
 }
 
 static ngx_int_t 
-ngx_http_server_info_handler(ngx_http_request_t *r){
-
+ngx_http_server_info_handler(ngx_http_request_t *r)
+{
   return NGX_OK;
-
 }
 
 static void *
